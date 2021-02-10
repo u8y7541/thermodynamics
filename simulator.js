@@ -1,6 +1,6 @@
 renderList = new ParticleList();
 let colors = ['red','blue','green','orange'];
-/*for (let i = 0; i<100; i++) {
+for (let i = 0; i<30; i++) {
 	let pos = new Vector(100*Math.random()-50,100*Math.random()-50);
 	let vel = new Vector(20*Math.random()-10,20*Math.random()-10);
 	let color = colors[Math.floor(Math.random()*colors.length)];
@@ -8,7 +8,7 @@ let colors = ['red','blue','green','orange'];
 	let mass = radius*radius;
 	let p = new Particle(pos,vel,mass,radius,color,ctx);
 	renderList.push(p);
-}
+}/*
 let a = new Particle(new Vector(0,0), new Vector(5,3), 225, 15, 'red', ctx);
 let b = new Particle(new Vector(-40,0),new Vector(5,3),225,15, 'blue', ctx);
 let c = new Particle(new Vector(-40,40),new Vector(5,3),225,15,'orange',ctx);
