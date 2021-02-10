@@ -10,6 +10,7 @@ class Particle {
 		this.pos = this.pos.add(this.vel.mult(TIMESTEP));
 	}
 	render() {
+		this.ctx.lineWidth = 1;
 		this.ctx.beginPath();
 		this.ctx.arc(...convertInv(this.pos),this.radius,0,2*Math.PI);
 		this.ctx.stroke();
@@ -18,6 +19,16 @@ class Particle {
 	}
 	static collide(a,b) {
 		return (a.pos.dist(b.pos)<a.radius+b.radius);
+	}
+	static calcCollisionNoSweep(a,b) {
+		let m1 = a.mass; let m2 = b.mass;
+		let p1 = a.vel.mult(m1);
+		let p2 = b.vel.mult(m2);
+		let n = a.pos.sub(b.pos).normalize();
+		let k = 2*(p2.mult(m1).sub(p1.mult(m2)).dot(n))/(m1+m2);
+		let v1 = p1.add(n.mult(k)).div(m1);
+		let v2 = p2.sub(n.mult(k)).div(m2);
+		a.vel = v1; b.vel = v2;
 	}
 	static calcCollision(a,b) {
 		let m1 = a.mass; let m2 = b.mass;
