@@ -9,8 +9,8 @@ class Constraint {
 		this.ctx.strokeStyle = "black";
 		this.ctx.lineWidth = 5;
 		this.ctx.beginPath();
-		this.ctx.moveTo(...convertInv(this.a.pos));
-		this.ctx.lineTo(...convertInv(this.b.pos));
+		this.ctx.moveTo(...convertInv(this.a.cm));
+		this.ctx.lineTo(...convertInv(this.b.cm));
 		this.ctx.stroke();
 	}
 	update() {}	

@@ -8,6 +8,7 @@ class Vector {
 	mult = (k) => new Vector(k*this.x,k*this.y);
 	div = (k) => this.mult(1/k);
 	dot = (v) => this.x*v.x+this.y*v.y;
+	cross = (v) => this.x*v.y-this.y*v.x;
 	rot(theta) {
 		const c = Math.cos(theta); const s = Math.sin(theta);
 		return new Vector(c*this.x-s*this.y,s*this.x+c*this.y);
