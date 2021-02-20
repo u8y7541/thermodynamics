@@ -12,6 +12,15 @@ class Particle extends Body {
 		this.ctx.fillStyle = this.color;
 		this.ctx.fill();
 	}
+	static segmentIntersect(a,b,c,d) {return (b>=c && d>=a);}
+	static collide(p,q) {
+		// Bounding box test
+		if (!Particle.segmentIntersect(p.cm.x-p.radius,p.cm.x+p.radius,q.cm.x-q.radius,q.cm.x+q.radius) ||
+			!Particle.segmentIntersect(p.cm.y-p.radius,p.cm.y+p.radius,q.cm.y-q.radius,q.cm.y+q.radius))
+			return false;
+		// Real circle intersection test
+		return (p.cm.dist(q.cm)<p.radius+q.radius);
+	}
 	getParticleList() {return [this]};
 	static calcCollisionNoSweep(a,b) {
 		let m1 = a.mass; let m2 = b.mass;
@@ -106,7 +115,7 @@ class ParticleList {
 				let num = -p.vel.dot(n)-p.omega*u;
 				let denom = 0.5*(1/p.mass+u*u/p.moment);
 				let k = num/denom;
-				p.vel = p.vel.add(n.mult(k/p.mass));
+				p.vel.addInPlace(n.mult(k/p.mass));
 				p.omega += u*k/p.moment; 
 			}
 		}

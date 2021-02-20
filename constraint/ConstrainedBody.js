@@ -4,10 +4,10 @@ class ConstrainedBody extends Body {
 		let cm = new Vector(0,0);
 		let mass = 0;
 		for (let p of list) {
-			cm = cm.add(p.cm.mult(p.mass));
+			cm.addInPlace(p.cm.mult(p.mass));
 			mass += p.mass;
 		}
-		cm = cm.div(mass);
+		cm.divInPlace(mass);
 		let moment = list.reduce((p,q) => p+q.mass*q.cm.sub(cm).squared(),0);
 		super(cm,vel,mass,0,omega,moment,ctx);
 
@@ -19,7 +19,7 @@ class ConstrainedBody extends Body {
 	update() {
 		super.update();
 		for (let i = 0; i<this.list.length; i++)
-			this.list[i].cm = this.cm.add(this.disp[i].rot(this.theta));
+			this.list[i].cm = this.disp[i].rot(this.theta).addInPlace(this.cm);
 	}
 	render() {
 		for (let b of this.bonds) {

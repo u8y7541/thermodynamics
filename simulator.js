@@ -3,7 +3,7 @@ window.onload = () => {
 init()
 renderList = new ParticleList();
 let colors = ['red','blue','green','orange'];
-for (let i = 0; i<10; i++) {
+for (let i = 0; i<100; i++) {
 	let pos = new Vector(100*Math.random()-50,100*Math.random()-50);
 	let vel = new Vector(20*Math.random()-10,20*Math.random()-10);
 	let color = colors[Math.floor(Math.random()*colors.length)];
@@ -13,7 +13,7 @@ for (let i = 0; i<10; i++) {
 	renderList.push(p);
 }
 
-for (let i = 0; i<15; i++) {
+for (let i = 0; i<30; i++) {
 	let pos = new Vector(500*Math.random()-250,400*Math.random()-200);
 	let vel = new Vector(10*Math.random()-5,10*Math.random()-5);
 	let particles = []
