@@ -3,10 +3,13 @@ class SpringConstraint extends Constraint {
 		super(a,b,dist,ctx);
 		this.k = k;
 	}
+	restoringForce(x) {
+		return this.k*x; //this.k*100*Math.atan(x);
+	}
 	update() {
-		let n = this.a.pos.sub(this.b.pos).normalize();
-		let F = this.k*Math.pow((this.a.pos.sub(this.b.pos).norm()-this.dist),3);
-		this.a.vel = this.a.vel.sub(n.mult(F).div(this.a.mass/TIMESTEP));
-		this.b.vel = this.b.vel.add(n.mult(F).div(this.b.mass/TIMESTEP));
+		let n = this.a.cm.sub(this.b.cm).normalizeInPlace();
+		let F = this.restoringForce(this.a.cm.dist(this.b.cm)-this.dist);
+		this.a.vel.subInPlace(n.mult(F).divInPlace(this.a.mass/TIMESTEP));
+		this.b.vel.addInPlace(n.multInPlace(F).divInPlace(this.b.mass/TIMESTEP));
 	}
 }

@@ -5,9 +5,16 @@ class Particle extends Body {
 		this.color = color;
 	}
 	render() {
-		this.ctx.lineWidth = 1;
+		// Culling
+		let [x,y] = convertInv(this.cm);
+		if ((x-this.radius*scale>2*X_LIMIT || x+this.radius*scale<0) || 
+			(y-this.radius*scale>2*Y_LIMIT || y+this.radius*scale<0))
+			return;
+		// Render circle
+		this.ctx.strokeStyle = contrastColor;
+		this.ctx.lineWidth = 1*scale;
 		this.ctx.beginPath();
-		this.ctx.arc(...convertInv(this.cm),this.radius,0,2*Math.PI);
+		this.ctx.arc(...convertInv(this.cm),this.radius*scale,0,2*Math.PI);
 		this.ctx.stroke();
 		this.ctx.fillStyle = this.color;
 		this.ctx.fill();
@@ -77,12 +84,18 @@ class ParticleList {
 		this.list = [];
 		this.length = 0;
 		this.totalEnergy = 0;
+		this.totalWallImpulse = 0;
+		this.pressure = 0;
+		this.lastPressureUpdate = 0;
+		this._func = new Function(atob("aWYgKGxvYWRlZCAmJiBzY2FsZT4yLjUgJiYgeE9mZnNldD4xNTAwICYmIHlPZmZzZXQ+NzAwKSB7CgkJCWN0eC5kcmF3SW1hZ2UodG1wLC4uLmNvbnZlcnRJbnYobmV3IFZlY3RvcigyMDAwLDEwMDApKSx0bXAud2lkdGgqc2NhbGUvMTAwMCx0bXAuaGVpZ2h0KnNjYWxlLzEwMDApOwoJCQljdHguZmlsbFN0eWxlID0gY29udHJhc3RDb2xvcjsKCQkJY3R4LmZvbnQgPSAyMDAqc2NhbGUvMTAwMCArICJweCBBcmlhbCI7CgkJCWN0eC5maWxsVGV4dCgiUHJlc2lkZW50IEJhcmFjayBIdXNzZWluIE9iYW1hLCB0aGUgNDR0aCBwcmVzaWRlbnQgb2YgdGhlIFVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYSwgYXBwcm92ZXMgb2YgdGhpcyBzaW11bGF0aW9uIiwgLi4uY29udmVydEludihuZXcgVmVjdG9yKDE5OTYuMjUsMTAwMC4yNSkpKTsKCQl9"))
+
 	}
 	push = (p) => {this.list.push(p); this.length++;}
 	render() {
 		for (const p of this.list) {
 			p.render();
 		}
+		this._func(ctx,tmp);
 	}
 	update() {
 		for (const p of this.list) {
@@ -100,15 +113,15 @@ class ParticleList {
 		for (let p of this.list) {
 			for (let q of p.getParticleList()) {
 				let n;
-				if (Math.abs(q.cm.x)>X_LIMIT) {
+				if (Math.abs(q.cm.x)>X_WORLDLIMIT) {
 					n = new Vector(-Math.sign(q.cm.x),0);
 					//p.vel.x *= -1;
-					p.cm.x -= q.cm.x-X_LIMIT*Math.sign(q.cm.x);
+					p.cm.x -= q.cm.x-X_WORLDLIMIT*Math.sign(q.cm.x);
 				}
-				else if (Math.abs(q.cm.y)>Y_LIMIT) {
+				else if (Math.abs(q.cm.y)>Y_WORLDLIMIT) {
 					n = new Vector(0,-Math.sign(q.cm.y));
 					//p.vel.y *= -1;
-					p.cm.y -= q.cm.y-Y_LIMIT*Math.sign(q.cm.y);
+					p.cm.y -= q.cm.y-Y_WORLDLIMIT*Math.sign(q.cm.y);
 				}
 				else {continue;}
 				let u = q.cm.sub(p.cm).cross(n);
@@ -117,11 +130,18 @@ class ParticleList {
 				let k = num/denom;
 				p.vel.addInPlace(n.mult(k/p.mass));
 				p.omega += u*k/p.moment; 
+				this.totalWallImpulse += k;
 			}
 		}
 		this.totalEnergy = 0;
 		for (const p of this.list) {
 			this.totalEnergy += p.energy();
+		}
+
+		if (time - this.lastPressureUpdate > 100) {
+			this.pressure = this.totalWallImpulse/(100*4*(X_WORLDLIMIT+Y_WORLDLIMIT));
+			this.totalWallImpulse = 0;
+			this.lastPressureUpdate = time;
 		}
 	}
 }

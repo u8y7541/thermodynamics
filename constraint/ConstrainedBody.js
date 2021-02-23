@@ -23,8 +23,8 @@ class ConstrainedBody extends Body {
 	}
 	render() {
 		for (let b of this.bonds) {
-			this.ctx.strokeStyle = "black";
-			this.ctx.lineWidth = 5;
+			this.ctx.strokeStyle = contrastColor;
+			this.ctx.lineWidth = 5*scale;
 			this.ctx.beginPath();
 			this.ctx.moveTo(...convertInv(b[0].cm));
 			this.ctx.lineTo(...convertInv(b[1].cm));
