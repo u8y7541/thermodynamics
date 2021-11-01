@@ -21,12 +21,15 @@
 <body>
 
 <main>
-<p class = "controls">WASD to shift camera, scroll to zoom</p>
+<p class = "controls">Use W, A, S, D keys to shift camera and scroll wheel to zoom</p>
 <button id = "colors" onclick = "toggle()">Dark mode</button>
+<button id = "reset" onclick = "resetLeft()">Start particles on left</button>
+<button id = "reset" onclick = "resetCenter()">Start particles at center</button>
+<button id = "reset" onclick = "resetRight()">Start particles on right</button>
 <p class = "sim-data" id = "energy"></p>
 <p class = "sim-data" id = "pressure"></p>
 <p class = "sim-data" id = "timeElapsed"></p>
-<p class = "sim-data">Simulation speed: <input type="range" min="0" max="2000" value="1000" class="slider" id="timestep">
+<p class = "sim-data">Simulation speed: <input type="range" min="0" max="5000" value="2" class="slider" id="timestep">
 </p>
 <br />
 <div class = "sim"><canvas id = "simulation"></canvas></div>

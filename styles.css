@@ -20,7 +20,7 @@ main {
 	font-size: 30px;
 	margin: 0px;
 }
-#colors {
+button {
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -29,6 +29,9 @@ main {
 }
 #colors:hover {
 	background-color: #EDEDED;
+}
+#reset:hover {
+	background-color: lightblue;
 }
 .sim {
 

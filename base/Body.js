@@ -15,6 +15,13 @@ class Body {
 	energy = () => 0.5*(this.mass*this.vel.squared()+this.moment*this.omega*this.omega);
 	render() {}
 	getParticleList() {}
+	applyContinuousForce(f, df, ddf, dddf) {
+		this.vel.addInPlace(f.mult(TIMESTEP)
+							 .addInPlace(df.mult(TIMESTEP*TIMESTEP/2))
+							 .addInPlace(ddf.mult(TIMESTEP*TIMESTEP*TIMESTEP/6))
+							 .addInPlace(dddf.mult(TIMESTEP*TIMESTEP*TIMESTEP*TIMESTEP/24))
+							 .divInPlace(this.mass));
+	}
 	static collide(a,b) {
 		for (let p of a.getParticleList()) {
 			for (let q of b.getParticleList()) {
